@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DFS Algorithm</title>
+</head>
+<body>
+    <h1>Thuật toán DFS</h1>
+
+    <h2>Ví Dụ: Trong một đồ thị đơn giản, có 6 đỉnh từ A đến F. Đỉnh A kề với đỉnh B và C, đỉnh B kề với đỉnh D và E, đỉnh C kề với đỉnh F. Các đỉnh D, E và F không kề với bất kỳ đỉnh nào khác.</h2>
+
+    <label for="startVertex">Đỉnh Xuất Phát:</label>
+    <input type="text" id="startVertex" placeholder="Nhập Đỉnh">
+    <button onclick="runDFS()">Chạy</button>
+    <div id="result"></div> 
+
+    <script>
+        // Định nghĩa đồ thị bằng danh sách kề
+        const graph = {
+            'A': ['B', 'C'],
+            'B': ['A', 'D', 'E'],
+            'C': ['A', 'F'],
+            'D': ['B'],
+            'E': ['B', 'F'],
+            'F': ['C', 'E']
+        };
+
+        // Hàm DFS
+        function DFS(startNode) {
+            const visited = {}; // Đánh dấu các đỉnh đã thăm
+            const result = []; // Mảng chứa kết quả
+
+            // Định nghĩa hàm đệ quy DFS
+            function recursiveDFS(node) {
+                visited[node] = true; // Đánh dấu đỉnh đã thăm
+                result.push(node); // Thêm đỉnh vào kết quả
+
+                // Duyệt qua tất cả các đỉnh kề của đỉnh hiện tại
+                const neighbors = graph[node];
+                for (let i = 0; i < neighbors.length; i++) {
+                    const neighbor = neighbors[i];
+                    if (!visited[neighbor]) {
+                        recursiveDFS(neighbor); // Gọi đệ quy DFS cho đỉnh kề chưa thăm
+                    }
+                }
+            }
+
+            recursiveDFS(startNode); // Bắt đầu DFS từ đỉnh bắt đầu
+
+            return result; // Trả về kết quả của DFS
+        }
+
+        // Hàm chạy DFS khi nhấn nút "Chạy"
+        function runDFS() {
+            const startNode = document.getElementById("startVertex").value;
+            const result = DFS(startNode);
+            const resultElement = document.getElementById("result");
+            resultElement.innerHTML = "<h2>Kết quả sử dụng thuật toán DFS:</h2>" + result.join(" -> ");
+        }
+    </script>
+</body>
+</html>
