@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liệt Kê Dãy Con</title>
+    <style>
+        h1 {font-size: 50px;}
+        h2{font-size:30px;}
+        button{font-size:30px;}
+        body{font-size:20px;}
+    </style>
+</head>
+<body>
+    <h1>Bài Toán Liệt Kê</h1>
+    <h2>Liệt kê tất cả các dãy con có độ dài từ 1 đến 3 của dãy số {1, 2, 3, 4}:</h2>
+    <button onclick="hienthidaycon()">Kết quả </button>
+    <div id="ketqua"></div> <!-- Thêm div để hiển thị kết quả -->
+
+    <script>
+        function lietkedaycon(arr) {
+            let ketqua = [];
+            const n = arr.length;
+
+            // Liệt kê tất cả các dãy con có độ dài từ 1 đến 3
+            for (let len = 1; len <= 3; len++) {
+                for (let i = 0; i <= n - len; i++) {
+                    let tieptheo = arr.slice(i, i + len);
+                    ketqua.push(tieptheo);
+                }
+            }
+
+            return ketqua;
+        }
+
+        // Dãy số đầu vào
+        const inputArray = [1, 2, 3, 4];
+
+        // Khai báo hàm để hiển thị kết quả
+        function hienthidaycon() {
+            const ketqua = lietkedaycon(inputArray);
+            document.getElementById("ketqua").innerText = "Dãy con là: "  + JSON.stringify(ketqua);
+        }
+    </script>
+</body>
+</html>
