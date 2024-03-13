@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài toán tìm số nguyên dương có 3 chữ số khác nhau </title>
+</head>
+<body>
+    <h1> Bài Toán Đếm </h1>
+    <h2> Có bao nhiêu số nguyên dương có 3 chữ số khác nhau? </h2>
+     <button onclick="showResult()">Kết quả</button>
+    <div id="ketqua"></div>
+    <script>
+        function timsonguyen() {
+            let count = 0;
+            for (let i = 100; i <= 999; i++) {
+                let numString = i.toString();
+                if (numString[0] !== numString[1] && numString[0] !== numString[2] && numString[1] !== numString[2]) {
+                    count++;
+                }
+            }
+            return count;
+        }
+        
+        function showResult() {
+            let kq = document.getElementById("ketqua");
+            kq.innerHTML = "kết quả là: " + timsonguyen();
+        }
+    </script>
+</body>
+</html>
