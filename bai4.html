@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bài toán người du lịch</title>
+<script>
+    function timHanhTrinhNguoiDuLich() {
+        const soLuongThanhPho = parseInt(document.getElementById("soLuongThanhPho").value);
+        const maTranChiPhi = [];
+        for (let i = 0; i < soLuongThanhPho; i++) {
+            maTranChiPhi[i] = [];
+            for (let j = 0; j < soLuongThanhPho; j++) {
+                if (i === j) {
+                    maTranChiPhi[i][j] = 0; // Chi phí từ một thành phố đến chính nó là 0
+                } else {
+                    maTranChiPhi[i][j] = parseInt(prompt("Nhập chi phí từ thành phố " + (i + 1) + " đến thành phố " + (j + 1)));
+                }
+            }
+        }
+
+        let hanhTrinh = [];
+        let chiPhiToiThieu = Number.MAX_SAFE_INTEGER;
+
+        function nguoiDuLichUtil(hanhTrinhHienTai, thanhPhoDaDi, chiPhiHienTai) {
+            if (thanhPhoDaDi.length === soLuongThanhPho) {
+                if (maTranChiPhi[thanhPhoDaDi[thanhPhoDaDi.length - 1]][0] > 0) {
+                    const chiPhiTotal = chiPhiHienTai + maTranChiPhi[thanhPhoDaDi[thanhPhoDaDi.length - 1]][0];
+                    if (chiPhiTotal < chiPhiToiThieu) {
+                        hanhTrinh = [...thanhPhoDaDi];
+                        hanhTrinh.push(0);
+                        chiPhiToiThieu = chiPhiTotal;
+                    }
+                }
+                return;
+            }
+
+            for (let i = 0; i < soLuongThanhPho; i++) {
+                if (!thanhPhoDaDi.includes(i) && maTranChiPhi[thanhPhoDaDi[thanhPhoDaDi.length - 1]][i] > 0) {
+                    const hanhTrinhMoi = [...hanhTrinhHienTai];
+                    hanhTrinhMoi.push(i);
+                    nguoiDuLichUtil(hanhTrinhMoi, [...thanhPhoDaDi, i], chiPhiHienTai + maTranChiPhi[thanhPhoDaDi[thanhPhoDaDi.length - 1]][i]);
+                }
+            }
+        }
+
+        nguoiDuLichUtil([0], [0], 0);
+
+        document.getElementById("ketQua").innerHTML = "Hành trình người du lịch: " + hanhTrinh.join(" -> ") + "<br>Chi phí tối thiểu: " + chiPhiToiThieu + "$";
+    }
+</script>
+</head>
+<body>
+    <h2>.Một người du lịch muốn đi tham quan thành phố T₁, T2, ..., T. Xuất phát từ nội thành phố nào đó người du lịch muốn đi qua tất cả các thành phố còn lại, mỗi thành phố đúng một lần, rồi quay trở lại thành phố xuất phát. Biết c, là chỉ phí đi từ thành phố 7, đến thành phố T, (i, j = 1, 2,..., n), hãy tìm hành trình (một cách đi thoả mãn điều kiện đặt ra) với tổng chi phí là nhỏ nhất.</h2>
+    <label for="soLuongThanhPho">Số lượng thành phố:</label>
+    <input type="number" id="soLuongThanhPho" name="soLuongThanhPho" min="2" max="10" required>
+    <br><br>
+
+    <button onclick="timHanhTrinhNguoiDuLich()">Tìm hành trình người du lịch</button>
+
+    <div id="ketQua"></div>
+</body>
+</html>
