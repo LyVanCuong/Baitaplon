@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thuật toán Kruskal</title>
+</head>
+<body>
+    <h1>Thuật toán Kruskal</h1>
+    <h2>Ví Dụ: Tìm cây khung nhỏ nhất của 1 đồ thị có trọng số, sử dụng thuật toán Kruskal bằng dữ liệu tự nhập vào từ bàn phím?</h2>
+    <div>
+        <label for="graphInput">Nhập ma trận trọng số của đồ thị:</label><br>
+        <textarea id="graphInput" rows="5" cols="30" placeholder="Ví dụ: 0 2 0 6 0&#10;2 0 3 8 5&#10;0 3 0 0 7&#10;6 8 0 0 9&#10;0 5 7 9 0"></textarea><br>
+        <button onclick="runKruskal()">Chạy Kruskal</button>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        function parseGraphInput(input) {
+            return input.trim().split('\n').map(row => row.trim().split(' ').map(Number));
+        }
+
+        function find(parent, i) {
+            while (parent[i] !== i) {
+                i = parent[i];
+            }
+            return i;
+        }
+
+        function union(parent, rank, x, y) {
+            const xRoot = find(parent, x);
+            const yRoot = find(parent, y);
+
+            if (rank[xRoot] < rank[yRoot]) {
+                parent[xRoot] = yRoot;
+            } else if (rank[xRoot] > rank[yRoot]) {
+                parent[yRoot] = xRoot;
+            } else {
+                parent[yRoot] = xRoot;
+                rank[xRoot]++;
+            }
+        }
+
+        function kruskalMST(graph) {
+            const parent = [];
+            const rank = [];
+
+            for (let i = 0; i < graph.length; i++) {
+                parent[i] = i;
+                rank[i] = 0;
+            }
+
+            const result = [];
+
+            let edgeCount = 0;
+            let i = 0;
+
+            const edges = [];
+            for (let u = 0; u < graph.length; u++) {
+                for (let v = u + 1; v < graph.length; v++) {
+                    if (graph[u][v] !== 0) {
+                        edges.push([u, v, graph[u][v]]);
+                    }
+                }
+            }
+            edges.sort((a, b) => a[2] - b[2]);
+
+            while (edgeCount < graph.length - 1 && i < edges.length) {
+                const [u, v, weight] = edges[i++];
+                const x = find(parent, u);
+                const y = find(parent, v);
+
+                if (x !== y) {
+                    result.push([u, v, weight]);
+                    union(parent, rank, x, y);
+                    edgeCount++;
+                }
+            }
+
+            return result;
+        }
+
+        function runKruskal() {
+            const graphInput = document.getElementById("graphInput").value;
+            const graph = parseGraphInput(graphInput);
+
+            const mst = kruskalMST(graph);
+            const resultElement = document.getElementById("result");
+            resultElement.innerHTML = "<h2>Cây khung nhỏ nhất bằng thuật toán Kruskal:</h2>";
+            for (let edge of mst) {
+                resultElement.innerHTML += edge[0] + " - " + edge[1] + ": " + edge[2] + "<br>";
+            }
+        }
+    </script>
+</body>
+</html>
