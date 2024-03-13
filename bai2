@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xếp quân hậu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center; 
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        #boardContainer {
+            display: flex;
+            justify-content: center;
+        }
+        #board {
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        #board td {
+            width: 30px;
+            height: 30px;
+            border: 1px solid black;
+            text-align: center;
+        }
+        .queen {
+            background-color: #0eafe0;
+        }
+        #giaiquyetbaitoan {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #solveButton {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bài Toán tồn tại</h1>
+    <h2>Hãy tìm 1 cách xếp 10 quân hậu vào bàn cờ 10 x 10, sao cho không có quân hậu nào ăn được nhau?</h2>
+    <div id="boardContainer">
+        <table id="board"></table>
+    </div>
+    <div id="giaiquyetbaitoan"></div>
+    <input id="solveButton" type="button" value="Giải pháp" onclick="solveQueens()">
+
+    <script>
+        function canPlaceQueen(board, row, col) {
+            // Kiểm tra hàng và cột
+            for (let i = 0; i < col; i++) {
+                if (board[row][i]) {
+                    return false;
+                }
+            }
+
+            // Kiểm tra đường chéo trên bên trái
+            for (let i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+                if (board[i][j]) {
+                    return false;
+                }
+            }
+
+            // Kiểm tra đường chéo dưới bên trái
+            for (let i = row, j = col; j >= 0 && i < 10; i++, j--) {
+                if (board[i][j]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function solveQueensUtil(board, col) {
+            // Nếu tất cả các cột đã được kiểm tra, trả về true
+            if (col >= 10) {
+                return true;
+            }
+
+            // Đặt quân hậu cho mỗi hàng trong cột hiện tại
+            for (let i = 0; i < 10; i++) {
+                if (canPlaceQueen(board, i, col)) {
+                    board[i][col] = 1; // Đặt quân hậu
+
+                    // Nếu đặt quân hậu ở hàng i, và giải quyết vấn đề cho các cột còn lại, trả về true
+                    if (solveQueensUtil(board, col + 1)) {
+                        return true;
+                    }
+
+                    // Nếu không tìm được vị trí hợp lệ cho quân hậu tiếp theo, thì loại bỏ quân hậu này và thử lại
+                    board[i][col] = 0; // Đánh dấu ô cờ trống
+                }
+            }
+
+            // Nếu không thể đặt quân hậu trong bất kỳ hàng nào, trả về false
+            return false;
+        }
+
+        function solveQueens() {
+            let board = Array(10).fill( ).map((  ) => Array(10).fill(0)); // Tạo bàn cờ 10x10 với tất cả các ô là ô cờ trống
+
+            if (!solveQueensUtil(board, 0)) {
+                document.getElementById("giaiquyetbaitoan").innerText = "Không có giải pháp.";
+                return false;
+            }
+
+            let solutionString = "Giải pháp:<br>";
+            for (let i = 0; i < 10; i++) {
+                solutionString += "<tr>";
+                for (let j = 0; j < 10; j++) {
+                    if (board[i][j] === 1) {
+                        solutionString += "<td class='queen'>x</td>"; // Sử dụng class 'queen' để tô màu cho ô chứa quân hậu
+                    } else {
+                        solutionString += "<td>o</td>";
+                    }
+                }
+                solutionString += "</tr>";
+            }
+            document.getElementById("board").innerHTML = solutionString;
+            document.getElementById("giaiquyetbaitoan").innerHTML = "(chú thích: x là quân hậu, o là ô trống trong bàn cờ)";
+            return true;
+        }
+    </script>
+</body>
+</html>
